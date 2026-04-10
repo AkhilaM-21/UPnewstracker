@@ -8,7 +8,7 @@ const { analyseText } = require("./sentimentEngine");
 const https = require("https");
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 4000;
 
 // ─── Translation Helper (Free Google Translate Interface) ─────────────────────
 function translateText(text) {
