@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import * as XLSX from "xlsx";
 import "./ArticlesTable.css";
 
 const FILTERS = [
@@ -76,15 +77,35 @@ export default function ArticlesTable({ articles }) {
     }
   };
 
+  const handleExcelDownload = () => {
+    const data = filtered.map((a, i) => ({
+      "S.No": i + 1,
+      "Title": a.title,
+      "Source": a.source,
+      "Date": a.date || "N/A",
+      "Sentiment": a.sentiment,
+      "Political Relevance": a.politically_relevant ? "Yes" : "No",
+      "URL": a.url
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Articles");
+    XLSX.writeFile(wb, `UP-Media-Articles-${new Date().toISOString().slice(0,10)}.xlsx`);
+  };
+
   const filtered = applyFilter(articles, active);
 
   return (
     <div className="at-wrap">
       {/* ── Header ── */}
       <div className="at-header">
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 15 }}>
           <span className="at-title">📰 All Scraped Articles</span>
           <span className="at-count">{filtered.length} / {articles.length} shown</span>
+          <button className="at-excel-btn" onClick={handleExcelDownload} title="Download as Excel">
+            📊 Download Excel
+          </button>
         </div>
 
         <div className="at-header-right notranslate">

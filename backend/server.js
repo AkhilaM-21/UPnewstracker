@@ -8,7 +8,7 @@ const { analyseText } = require("./sentimentEngine");
 const https = require("https");
 
 const app = express();
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 5000;
 
 // ─── Translation Helper (Free Google Translate Interface) ─────────────────────
 function translateText(text) {
@@ -107,7 +107,7 @@ app.post("/api/analyze", async (req, res) => {
     if (uniqueGroups.length > 0) {
       // Limit total keyword groups to the first 10 for performance
       const activeGroups = uniqueGroups.slice(0, 10);
-      
+
       // Process in batches of 2 to avoid overwhelming Google/Sites
       for (let i = 0; i < activeGroups.length; i += 2) {
         const batch = activeGroups.slice(i, i + 2);

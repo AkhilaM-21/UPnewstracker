@@ -42,15 +42,15 @@ export default function SentimentDonut({ pos, neg, neu, pol, total }) {
   return (
     <div className="chart-card">
       <div className="chart-title">Sentiment of Articles</div>
-      <div style={{ position: "relative", height: 200 }}>
+      <div className="chart-wrap donut-wrap">
         <Doughnut data={data} options={options} />
       </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 5, marginTop: 10 }}>
+      <div className="legend-container">
         {legend.map((l) => (
-          <div key={l.label} style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 11 }}>
-            <span style={{ width: 10, height: 10, borderRadius: 2, background: l.color, flexShrink: 0 }} />
-            <span style={{ flex: 1, color: "#444" }}>{l.label}</span>
-            <span style={{ fontWeight: 700 }}>{l.pct}%</span>
+          <div key={l.label} className="legend-item">
+            <span className="legend-color" style={{ background: l.color }} />
+            <span className="legend-label">{l.label}</span>
+            <span className="legend-pct">{l.pct}%</span>
           </div>
         ))}
       </div>

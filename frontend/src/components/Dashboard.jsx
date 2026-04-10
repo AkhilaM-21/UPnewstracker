@@ -50,22 +50,24 @@ export default function Dashboard({ articles }) {
     if (!dashRef.current) return;
     setIsExporting(true);
     try {
+      // Small delay to let React update classes and charts to redraw if needed
+      await new Promise(r => setTimeout(r, 300));
+
       const canvas = await html2canvas(dashRef.current, {
-        scale: 2, // Higher quality
+        scale: 2,
         useCORS: true,
         logging: false,
-        backgroundColor: "#f0f0f0", // Match body background
+        backgroundColor: "#f4f4f4",
       });
       const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("p", "mm", "a4");
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
       
-      const imgWidth = pdfWidth - 20; // 10mm margin
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      // Calculate landscape dimensions
+      const pdfWidth = 297; // A4 Landscape Width in mm
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
       
-      pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
-      pdf.save(`UP-Media-Tracker-Report-${new Date().toISOString().slice(0,10)}.pdf`);
+      const pdf = new jsPDF("l", "mm", [pdfWidth, pdfHeight]);
+      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`UP-Media-Tracker-Snapshot-${new Date().toISOString().slice(0,10)}.pdf`);
     } catch (err) {
       console.error("PDF Export failed:", err);
       alert("Failed to generate PDF. Please try again.");
@@ -75,7 +77,7 @@ export default function Dashboard({ articles }) {
   }
 
   return (
-    <div className="dash" ref={dashRef}>
+    <div className={`dash ${isExporting ? "is-exporting" : ""}`} ref={dashRef}>
       <div className="dash-header notranslate">
         <h2 className="dash-title">Media Analytics Report</h2>
         <button 

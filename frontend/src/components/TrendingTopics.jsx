@@ -32,7 +32,7 @@ export default function TrendingTopics({ topics }) {
   return (
     <div className="chart-card">
       <div className="chart-title">Trending Topics</div>
-      <div style={{ position: "relative", height: 180 }}>
+      <div className="chart-wrap topics-wrap">
         <Bar data={data} options={options} />
       </div>
     </div>

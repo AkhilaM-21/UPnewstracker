@@ -73,16 +73,17 @@
 
 .dash-grid {
   display: grid;
-  grid-template-columns: 340px 1fr 1fr;
+  grid-template-columns: 350px 1fr 1fr;
+  grid-template-rows: 1fr 1fr; /* Two equal rows that stretch to fit */
   gap: 10px;
-  align-items: start;
 }
 
 /* Few sources: Trending topics spans full width underneath */
 .dash-grid.is-compact {
   grid-template-areas: 
     "source donut date"
-    "topics topics topics";
+    "topics topics topics"
+    ". . .";
 }
 
 /* Many sources: Source table spans vertically, topics tucks under charts */
@@ -92,7 +93,7 @@
     "source topics topics";
 }
 
-.dash-cell-source { grid-area: source; }
+.dash-cell-source { grid-area: source; grid-row: 1 / span 2; }
 .dash-cell-donut { grid-area: donut; }
 .dash-cell-date { grid-area: date; }
 .dash-cell-topics { grid-area: topics; }
@@ -101,13 +102,26 @@
   background: #fff;
   border: 1px solid var(--border);
   border-radius: 3px;
-  padding: 10px 12px;
+  padding: 8px 10px;
+  height: 100%; /* Fill the grid cell */
+  display: flex;
+  flex-direction: column;
 }
+.chart-wrap { position: relative; width: 100%; flex: 1; min-height: 0; }
+.donut-wrap { height: 100%; }
+.date-wrap { height: 100%; }
+.topics-wrap { height: 100%; }
+.legend-container { display: flex; flex-direction: column; gap: 4px; margin-top: 5px; }
+.legend-item { display: flex; align-items: center; gap: 7px; font-size: 11px; }
+.legend-color { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+.legend-label { flex: 1; color: #444; }
+.legend-pct { font-weight: 700; }
+
 .chart-title {
   font-size: 13px;
   font-weight: 700;
   text-align: center;
-  margin-bottom: 8px;
+  margin-bottom: 5px;
   color: #222;
 }
 
@@ -135,4 +149,39 @@
 
 @media (max-width: 540px) {
   .dash-summary { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* PDF Export Overrides */
+.dash.is-exporting {
+  background: #f4f4f4;
+  padding: 20px;
+  width: 1280px !important; /* Lock to desktop width for a true snapshot */
+}
+.dash.is-exporting .dash-download-btn,
+.dash.is-exporting .at-wrap {
+  display: none !important;
+}
+.dash.is-exporting .dash-summary {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  margin-bottom: 15px;
+  gap: 10px;
+}
+.dash.is-exporting .sum-card {
+  border: 1px solid #ddd;
+  padding: 10px;
+}
+.dash.is-exporting .dash-grid {
+  display: grid !important;
+  grid-template-columns: 350px 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 10px;
+}
+.dash.is-exporting .chart-card {
+  border: 1px solid #ddd;
+}
+.dash.is-exporting .donut-wrap,
+.dash.is-exporting .date-wrap,
+.dash.is-exporting .topics-wrap { 
+  height: 100% !important;
 }

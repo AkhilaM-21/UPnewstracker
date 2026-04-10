@@ -44,7 +44,7 @@ export default function SentimentByDate({ dateMap }) {
           </span>
         ))}
       </div>
-      <div style={{ position: "relative", height: 195 }}>
+      <div className="chart-wrap date-wrap">
         <Bar data={data} options={options} />
       </div>
     </div>
